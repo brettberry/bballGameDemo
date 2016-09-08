@@ -20,6 +20,9 @@ class GameViewController: UIViewController, SKPhysicsContactDelegate {
     
         let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture))
         view.addGestureRecognizer(pan)
+        
+        
+        
     }
     
     @objc private func handlePanGesture(recognizer: UIPanGestureRecognizer) {
@@ -39,13 +42,21 @@ class GameViewController: UIViewController, SKPhysicsContactDelegate {
             let newSpritePoint = gameView.convertPoint(newPoint, toScene: scene)
             
         case .Ended:
-            let force: CGFloat = 1.0
+            let force: CGFloat = -1.0
             let gestureVelocity = recognizer.velocityInView(recognizer.view)
             let impulse = CGVectorMake(gestureVelocity.x * force, gestureVelocity.y * force)
+            let ballNode = scene.childNodeWithName("ball")
+            ballNode?.physicsBody?.applyImpulse(impulse)
+            
         default:
             break
         
         }
+    
+    }
+    
+    func throwBall() {
+        
     
     }
     

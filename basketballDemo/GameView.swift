@@ -24,7 +24,6 @@ class GameView: SKView, TimerDelegate {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         let scene = SKScene(size: frame.size)
         scene.backgroundColor = UIColor.whiteColor()
         presentScene(scene)
@@ -97,6 +96,7 @@ class GameView: SKView, TimerDelegate {
         let rect = CGRectMake(location.x, location.y, size.width, size.height)
         let path = CGPathCreateWithEllipseInRect(rect, nil)
         ball = SKShapeNode(path: path)
+        ball.name = "ball"
         ball.fillColor = UIColor.orangeColor()
         ball.strokeColor = UIColor.orangeColor()
         
