@@ -27,7 +27,6 @@ class GameView: SKView, TimerDelegate {
         let scene = SKScene(size: frame.size)
         scene.backgroundColor = UIColor.whiteColor()
         presentScene(scene)
-        
         createHoop()
         createBall()
         createFloor()
@@ -89,7 +88,7 @@ class GameView: SKView, TimerDelegate {
         shotClock.addChild(timeLabel)
     }
     
-    private func createBall() {
+    func createBall() {
         
         let size = CGSize(width: 100, height: 100)
         let location = CGPointMake((frame.width - size.width) / 2, 100)
@@ -112,6 +111,7 @@ class GameView: SKView, TimerDelegate {
         let shadowRect = CGRectMake(location.x, 90, shadowSize.width, shadowSize.height)
         let shadowPath = CGPathCreateWithEllipseInRect(shadowRect, nil)
         let shadow = SKShapeNode(path: shadowPath)
+        shadow.name = "shadow"
         shadow.fillColor = UIColor.grayColor()
         shadow.strokeColor = UIColor.clearColor()
         shadow.zPosition = -1
