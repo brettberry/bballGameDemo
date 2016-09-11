@@ -38,10 +38,19 @@ class GameViewController: UIViewController, SKPhysicsContactDelegate {
             
             let shadowNode = scene.childNodeWithName("shadow")
             shadowNode?.removeFromParent()
+            
             ballNode?.name = "inactiveBall"
             
-            gameView.createBall()
+            let respawnDelay = SKAction.waitForDuration(1.0)
+            let respawn = SKAction.runBlock() {
+                self.gameView.createBall()
+            }
+            
+            let reload = SKAction.sequence([respawnDelay, respawn])
+            ballNode?.runAction(reload)
         }
     }
+
+
 }
 

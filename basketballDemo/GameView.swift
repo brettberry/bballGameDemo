@@ -105,7 +105,11 @@ class GameView: SKView, TimerDelegate {
         ballBody.categoryBitMask = PhysicsType.ball
         ballBody.collisionBitMask = PhysicsType.hoop
         ball.physicsBody = ballBody
+        ball.alpha = 0.0
         scene?.addChild(ball)
+        
+        let fadeIn = SKAction.fadeInWithDuration(0.05)
+        ball.runAction(fadeIn)
         
         let shadowSize = CGSize(width: size.width, height: size.height / 3)
         let shadowRect = CGRectMake(location.x, 90, shadowSize.width, shadowSize.height)
