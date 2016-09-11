@@ -8,19 +8,10 @@
 
 import SpriteKit
 
-class GameView: SKView, TimerDelegate {
+class GameView: SKView {
     
-    var timeLabel = SKLabelNode()
-    var countdownTimer: Timer!
     var ball: SKShapeNode!
-    
-    var formatter: NSNumberFormatter = {
-        var formatter = NSNumberFormatter()
-        formatter.maximumFractionDigits = 2
-        formatter.minimumIntegerDigits = 1
-        formatter.minimumFractionDigits = 2
-        return formatter
-    }()
+    var timeLabel = SKLabelNode()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -30,7 +21,6 @@ class GameView: SKView, TimerDelegate {
         createHoop()
         createBall()
         createFloor()
-        countdownTimer = Timer(seconds: 20, delegate: self)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -44,12 +34,12 @@ class GameView: SKView, TimerDelegate {
         let size = CGSize(width: width, height: height)
         let x = (frame.width - size.width) / 2
         let y = (frame.height - size.height) * (3/4)
-        
         let rect = CGRectMake(x, y, size.width, size.height)
         let path = CGPathCreateWithRoundedRect(rect, 20, 20, nil)
         let backboard = SKShapeNode(path: path)
         backboard.strokeColor = UIColor.grayColor()
         backboard.lineWidth = 5
+        backboard.zPosition = 0
         scene?.addChild(backboard)
         
         let innerRectSize = CGSize(width: size.width * (2/5), height: size.height * (2/5) + 10)
@@ -60,7 +50,7 @@ class GameView: SKView, TimerDelegate {
         let innerRect = SKShapeNode(path: smallPath)
         innerRect.strokeColor = UIColor.grayColor()
         innerRect.lineWidth = 4
-        scene?.addChild(innerRect)
+        backboard.addChild(innerRect)
         
         let hoopSize = CGSize(width: innerRectSize.width + 20, height: 0)
         let hoopRect = CGRectMake(xOffset - 10, yOffset, hoopSize.width, hoopSize.height)
@@ -68,6 +58,7 @@ class GameView: SKView, TimerDelegate {
         let hoop = SKShapeNode(path: hoopPath)
         hoop.strokeColor = UIColor.redColor()
         hoop.lineWidth = 7
+        hoop.zPosition = 3
         scene?.addChild(hoop)
         
         let clockSize = CGSize(width: innerRectSize.width, height: innerRectSize.height / 2)
@@ -78,7 +69,7 @@ class GameView: SKView, TimerDelegate {
         let shotClock = SKShapeNode(path: clockPath)
         shotClock.fillColor = UIColor.lightGrayColor()
         shotClock.strokeColor = UIColor.lightGrayColor()
-        scene?.addChild(shotClock)
+        backboard.addChild(shotClock)
         
         timeLabel.horizontalAlignmentMode = .Center
         timeLabel.verticalAlignmentMode = .Center
@@ -95,7 +86,6 @@ class GameView: SKView, TimerDelegate {
         let rect = CGRectMake(location.x, location.y, size.width, size.height)
         let path = CGPathCreateWithEllipseInRect(rect, nil)
         ball = SKShapeNode(path: path)
-        ball.name = "ball"
         ball.fillColor = UIColor.orangeColor()
         ball.strokeColor = UIColor.orangeColor()
         
@@ -106,6 +96,7 @@ class GameView: SKView, TimerDelegate {
         ballBody.collisionBitMask = PhysicsType.hoop
         ball.physicsBody = ballBody
         ball.alpha = 0.0
+        ball.zPosition = 4
         scene?.addChild(ball)
         
         let fadeIn = SKAction.fadeInWithDuration(0.05)
@@ -118,7 +109,7 @@ class GameView: SKView, TimerDelegate {
         shadow.name = "shadow"
         shadow.fillColor = UIColor.grayColor()
         shadow.strokeColor = UIColor.clearColor()
-        shadow.zPosition = -1
+        shadow.zPosition = 3
         shadow.alpha = 0.4
         scene?.addChild(shadow)
         
@@ -138,26 +129,10 @@ class GameView: SKView, TimerDelegate {
         let path = CGPathCreateWithRect(rect, nil)
         let floor = SKShapeNode(path: path)
         floor.fillColor = UIColor.lightGrayColor()
-        floor.zPosition = -2
+        floor.zPosition = 2
         scene?.addChild(floor)
     }
-    
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        countdownTimer.start()
-    }
-    
-    func timerDidComplete() {
-        timeLabel.text = "0.00"
-    }
-    
-    func timerDidUpdate(withCurrentTime time: NSTimeInterval) {
-        if let countdownString = formatter.stringFromNumber(time) {
-            timeLabel.text = countdownString
-        }
-    }
 }
-
-
 
 
 
