@@ -30,9 +30,9 @@ class GameViewController: UIViewController  {
         configurePanGesture()
         countdownTimer = Timer(seconds: 20, delegate: self)
         gameView.scene?.physicsWorld.contactDelegate = self
-//        gameView.showsPhysics = true 
+        gameView.scene?.delegate = self
+//        gameView.showsPhysics = true
     }
-
     
     private func configurePanGesture() {
         let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture))
@@ -97,17 +97,30 @@ extension GameViewController: SKPhysicsContactDelegate {
         let firstNode = contact.bodyA.node
         let secondNode = contact.bodyB.node
         
-        if (contact.bodyA.categoryBitMask == PhysicsType.ball) && (contact.bodyB.categoryBitMask == PhysicsType.hoop) ||
+        if (contact.bodyA.categoryBitMask == PhysicsType.ball && contact.bodyB.categoryBitMask == PhysicsType.hoop) ||
            (contact.bodyA.categoryBitMask == PhysicsType.hoop && contact.bodyB.categoryBitMask == PhysicsType.ball) {
             
-            gameView.score += 1
-            gameView.scoreLabel.text = "\(gameView.score)"
+            if firstNode?.position.y > gameView.hoopRect.origin.y || secondNode?.position.y > gameView.hoopRect.origin.y {
+                gameView.score += 1
+                gameView.scoreLabel.text = "\(gameView.score)"
+            }
         }
-        
     }
     
     func didEndContact(contact: SKPhysicsContact) {
         
+    }
+}
+
+extension GameViewController: SKSceneDelegate {
+
+    func update(currentTime: NSTimeInterval, forScene scene: SKScene) {
+        
+        if gameView.ball.position.y >= gameView.hoopRect.origin.y {
+            gameView.ball.physicsBody?.collisionBitMask = PhysicsType.rim
+        } else if gameView.ball.position.y < gameView.hoopRect.origin.y {
+            gameView.ball.physicsBody?.collisionBitMask = PhysicsType.none
+        }
     }
 }
 

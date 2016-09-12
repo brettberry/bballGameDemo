@@ -13,5 +13,6 @@ struct PhysicsType {
     static let none: UInt32 = 0
     static let ball: UInt32 = 1
     static let hoop: UInt32 = 2
+    static let rim:  UInt32 = 4
 
 }
