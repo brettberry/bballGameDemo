@@ -9,7 +9,7 @@
 import UIKit
 import SpriteKit
 
-class GameViewController: UIViewController, SKPhysicsContactDelegate, TimerDelegate {
+class GameViewController: UIViewController  {
     
     var gameView: GameView!
     var countdownTimer: Timer!
@@ -29,7 +29,10 @@ class GameViewController: UIViewController, SKPhysicsContactDelegate, TimerDeleg
         view.addSubview(gameView)
         configurePanGesture()
         countdownTimer = Timer(seconds: 20, delegate: self)
+        gameView.scene?.physicsWorld.contactDelegate = self
+//        gameView.showsPhysics = true 
     }
+
     
     private func configurePanGesture() {
         let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture))
@@ -63,7 +66,7 @@ class GameViewController: UIViewController, SKPhysicsContactDelegate, TimerDeleg
             let shrinkBall = SKAction.scaleBy(0.75, duration: 1.0)
             gameView.ball.runAction(shrinkBall)
             
-            let respawnDelay = SKAction.waitForDuration(1.0)
+            let respawnDelay = SKAction.waitForDuration(0.5)
             let respawn = SKAction.runBlock() {
                 self.gameView.createBall()
             }
@@ -71,9 +74,10 @@ class GameViewController: UIViewController, SKPhysicsContactDelegate, TimerDeleg
             gameView.ball.runAction(reload)
         }
     }
+    
 }
 
-extension GameViewController {
+extension GameViewController: TimerDelegate {
 
     func timerDidComplete() {
         gameView.timeLabel.text = "0.00"
@@ -83,6 +87,27 @@ extension GameViewController {
         if let countdownString = formatter.stringFromNumber(time) {
             gameView.timeLabel.text = countdownString
         }
+    }
+}
+
+extension GameViewController: SKPhysicsContactDelegate {
+
+    func didBeginContact(contact: SKPhysicsContact) {
+        
+        let firstNode = contact.bodyA.node
+        let secondNode = contact.bodyB.node
+        
+        if (contact.bodyA.categoryBitMask == PhysicsType.ball) && (contact.bodyB.categoryBitMask == PhysicsType.hoop) ||
+           (contact.bodyA.categoryBitMask == PhysicsType.hoop && contact.bodyB.categoryBitMask == PhysicsType.ball) {
+            
+            gameView.score += 1
+            gameView.scoreLabel.text = "\(gameView.score)"
+        }
+        
+    }
+    
+    func didEndContact(contact: SKPhysicsContact) {
+        
     }
 }
 

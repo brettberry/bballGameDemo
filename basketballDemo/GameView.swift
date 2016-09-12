@@ -12,6 +12,8 @@ class GameView: SKView {
     
     var ball: SKShapeNode!
     var timeLabel = SKLabelNode()
+    var scoreLabel = SKLabelNode()
+    var score: Int = 0
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -21,6 +23,7 @@ class GameView: SKView {
         createHoop()
         createBall()
         createFloor()
+        createScoreBoard(score)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -38,6 +41,7 @@ class GameView: SKView {
         let path = CGPathCreateWithRoundedRect(rect, 20, 20, nil)
         let backboard = SKShapeNode(path: path)
         backboard.strokeColor = UIColor.grayColor()
+        backboard.fillColor = UIColor.whiteColor()
         backboard.lineWidth = 5
         backboard.zPosition = 0
         scene?.addChild(backboard)
@@ -59,6 +63,15 @@ class GameView: SKView {
         hoop.strokeColor = UIColor.redColor()
         hoop.lineWidth = 7
         hoop.zPosition = 3
+        
+        let hoopBody = SKPhysicsBody(edgeChainFromPath: hoopPath)
+        hoopBody.mass = 1.0
+        hoopBody.affectedByGravity = false
+        hoopBody.categoryBitMask = PhysicsType.hoop
+        hoopBody.contactTestBitMask = PhysicsType.ball
+        hoopBody.collisionBitMask = PhysicsType.none
+        hoopBody.pinned = true
+        hoop.physicsBody = hoopBody
         scene?.addChild(hoop)
         
         let clockSize = CGSize(width: innerRectSize.width, height: innerRectSize.height / 2)
@@ -88,15 +101,16 @@ class GameView: SKView {
         ball = SKShapeNode(path: path)
         ball.fillColor = UIColor.orangeColor()
         ball.strokeColor = UIColor.orangeColor()
+        ball.alpha = 0.0
+        ball.zPosition = 4
         
-        let ballBody = SKPhysicsBody(circleOfRadius: size.width / 2, center: location)
+        let ballBody = SKPhysicsBody(circleOfRadius: size.width / 2, center: CGPointMake(location.x + size.width / 2, location.y + size.height / 2))
         ballBody.mass = 1.0
         ballBody.affectedByGravity = false
         ballBody.categoryBitMask = PhysicsType.ball
-        ballBody.collisionBitMask = PhysicsType.hoop
+        ballBody.collisionBitMask = PhysicsType.none
+        ballBody.contactTestBitMask = PhysicsType.hoop
         ball.physicsBody = ballBody
-        ball.alpha = 0.0
-        ball.zPosition = 4
         scene?.addChild(ball)
         
         let fadeIn = SKAction.fadeInWithDuration(0.05)
@@ -131,6 +145,15 @@ class GameView: SKView {
         floor.fillColor = UIColor.lightGrayColor()
         floor.zPosition = 2
         scene?.addChild(floor)
+    }
+    
+    private func createScoreBoard(score: Int) {
+        scoreLabel.fontColor = UIColor.grayColor()
+        scoreLabel.position = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds) - 75)
+        scoreLabel.verticalAlignmentMode = .Center
+        scoreLabel.fontSize = 72
+        scoreLabel.text = "\(score)"
+        scene?.addChild(scoreLabel)
     }
 }
 
