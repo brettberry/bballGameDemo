@@ -31,7 +31,6 @@ class GameViewController: UIViewController  {
         countdownTimer = Timer(seconds: 20, delegate: self)
         gameView.scene?.physicsWorld.contactDelegate = self
         gameView.scene?.delegate = self
-//        gameView.showsPhysics = true
     }
     
     private func configurePanGesture() {
@@ -91,24 +90,19 @@ extension GameViewController: TimerDelegate {
 }
 
 extension GameViewController: SKPhysicsContactDelegate {
-
-    func didBeginContact(contact: SKPhysicsContact) {
+    
+    func didEndContact(contact: SKPhysicsContact) {
         
-        let firstNode = contact.bodyA.node
         let secondNode = contact.bodyB.node
         
         if (contact.bodyA.categoryBitMask == PhysicsType.ball && contact.bodyB.categoryBitMask == PhysicsType.hoop) ||
            (contact.bodyA.categoryBitMask == PhysicsType.hoop && contact.bodyB.categoryBitMask == PhysicsType.ball) {
-            
-            if firstNode?.position.y > gameView.hoopRect.origin.y || secondNode?.position.y > gameView.hoopRect.origin.y {
+
+            if secondNode?.physicsBody?.velocity.dy < 0 {
                 gameView.score += 1
                 gameView.scoreLabel.text = "\(gameView.score)"
             }
         }
-    }
-    
-    func didEndContact(contact: SKPhysicsContact) {
-        
     }
 }
 

@@ -16,6 +16,7 @@ class GameView: SKView {
     var score: Int = 0
     var hoopSize: CGSize!
     var hoopRect: CGRect!
+    var hoop: SKShapeNode!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -42,7 +43,7 @@ class GameView: SKView {
         ball.fillColor = UIColor.orangeColor()
         ball.strokeColor = UIColor.orangeColor()
         ball.alpha = 0.0
-        ball.zPosition = 10
+        ball.zPosition = 5
         
         let ballBody = SKPhysicsBody(circleOfRadius: size.width / 2, center: CGPointMake(location.x + size.width / 2, location.y + size.height / 2))
         ballBody.mass = 1.0
@@ -51,6 +52,7 @@ class GameView: SKView {
         ballBody.collisionBitMask = PhysicsType.rim
         ballBody.contactTestBitMask = PhysicsType.hoop
         ballBody.usesPreciseCollisionDetection = true
+        ballBody.dynamic = true 
         ball.physicsBody = ballBody
         scene?.addChild(ball)
 
@@ -78,7 +80,7 @@ class GameView: SKView {
         ball.addChild(highlight)
     }
     
-    private func createHoop() {
+private func createHoop() {
         let width: CGFloat = frame.width * 3/5
         let height: CGFloat = width * 2/3
         let size = CGSize(width: width, height: height)
@@ -106,18 +108,18 @@ class GameView: SKView {
         hoopSize = CGSize(width: innerRectSize.width + 20, height: 0)
         hoopRect = CGRectMake(xOffset - 10, yOffset, hoopSize.width, hoopSize.height)
         let hoopPath = CGPathCreateWithRoundedRect(hoopRect, 5, 0, nil)
-        let hoop = SKShapeNode(path: hoopPath)
+        hoop = SKShapeNode(path: hoopPath)
         hoop.strokeColor = UIColor.blackColor()
         hoop.lineWidth = 7
         hoop.zPosition = 1
-        
+    
         let hoopBody = SKPhysicsBody(edgeChainFromPath: hoopPath)
         hoopBody.mass = 1.0
         hoopBody.affectedByGravity = false
         hoopBody.categoryBitMask = PhysicsType.hoop
         hoopBody.contactTestBitMask = PhysicsType.ball
         hoopBody.collisionBitMask = PhysicsType.none
-        hoopBody.pinned = true
+        hoopBody.usesPreciseCollisionDetection = true
         hoop.physicsBody = hoopBody
         scene?.addChild(hoop)
                
@@ -158,14 +160,14 @@ class GameView: SKView {
         let rimBodyLeft = SKPhysicsBody(edgeChainFromPath: rimPathLeft)
         rimBodyLeft.categoryBitMask = PhysicsType.rim
         rimBodyLeft.contactTestBitMask = PhysicsType.none
-        rimBodyLeft.collisionBitMask = PhysicsType.none
+        rimBodyLeft.collisionBitMask = PhysicsType.ball
         rimBodyLeft.usesPreciseCollisionDetection = true
         rimLeft.physicsBody = rimBodyLeft
         
         let rimBodyRight = SKPhysicsBody(edgeChainFromPath: rimPathRight)
         rimBodyRight.categoryBitMask = PhysicsType.rim
         rimBodyRight.contactTestBitMask = PhysicsType.none
-        rimBodyRight.collisionBitMask = PhysicsType.none
+        rimBodyRight.collisionBitMask = PhysicsType.ball
         rimBodyRight.usesPreciseCollisionDetection = true
         rimRight.physicsBody = rimBodyRight
     }
@@ -176,7 +178,7 @@ class GameView: SKView {
         let path = CGPathCreateWithRect(rect, nil)
         let floor = SKShapeNode(path: path)
         floor.fillColor = UIColor.lightGrayColor()
-//        floor.zPosition = 2 
+        floor.zPosition = 2
         scene?.addChild(floor)
     }
     
