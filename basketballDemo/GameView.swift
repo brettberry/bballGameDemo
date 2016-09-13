@@ -46,13 +46,11 @@ class GameView: SKView {
         ball.zPosition = 5
         
         let ballBody = SKPhysicsBody(circleOfRadius: size.width / 2, center: CGPointMake(location.x + size.width / 2, location.y + size.height / 2))
-        ballBody.mass = 1.0
         ballBody.affectedByGravity = false
         ballBody.categoryBitMask = PhysicsType.ball
         ballBody.collisionBitMask = PhysicsType.rim
         ballBody.contactTestBitMask = PhysicsType.hoop
         ballBody.usesPreciseCollisionDetection = true
-        ballBody.dynamic = true 
         ball.physicsBody = ballBody
         scene?.addChild(ball)
 
@@ -80,7 +78,7 @@ class GameView: SKView {
         ball.addChild(highlight)
     }
     
-private func createHoop() {
+    private func createHoop() {
         let width: CGFloat = frame.width * 3/5
         let height: CGFloat = width * 2/3
         let size = CGSize(width: width, height: height)
@@ -122,7 +120,7 @@ private func createHoop() {
         hoopBody.usesPreciseCollisionDetection = true
         hoop.physicsBody = hoopBody
         scene?.addChild(hoop)
-               
+    
         let clockSize = CGSize(width: innerRectSize.width, height: innerRectSize.height / 2)
         let clockX = xOffset
         let clockY = y + size.height - innerRectSize.height / 4

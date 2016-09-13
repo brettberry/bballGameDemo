@@ -14,6 +14,7 @@ class GameViewController: UIViewController  {
     var gameView: GameView!
     var countdownTimer: Timer!
     var clockBegan = false
+    var didRegisterBasket = false
     
     var formatter: NSNumberFormatter = {
         var formatter = NSNumberFormatter()
@@ -71,6 +72,7 @@ class GameViewController: UIViewController  {
             }
             let reload = SKAction.sequence([respawnDelay, respawn])
             gameView.ball.runAction(reload)
+            didRegisterBasket = false
         }
     }
     
@@ -91,16 +93,17 @@ extension GameViewController: TimerDelegate {
 
 extension GameViewController: SKPhysicsContactDelegate {
     
-    func didEndContact(contact: SKPhysicsContact) {
+    func didBeginContact(contact: SKPhysicsContact) {
         
         let secondNode = contact.bodyB.node
         
         if (contact.bodyA.categoryBitMask == PhysicsType.ball && contact.bodyB.categoryBitMask == PhysicsType.hoop) ||
            (contact.bodyA.categoryBitMask == PhysicsType.hoop && contact.bodyB.categoryBitMask == PhysicsType.ball) {
 
-            if secondNode?.physicsBody?.velocity.dy < 0 {
+            if secondNode?.physicsBody?.velocity.dy < 0 && !didRegisterBasket {
                 gameView.score += 1
                 gameView.scoreLabel.text = "\(gameView.score)"
+                didRegisterBasket = true
             }
         }
     }
