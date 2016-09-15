@@ -13,8 +13,9 @@ class GameViewController: UIViewController  {
     
     var gameView: GameView!
     var countdownTimer: Timer!
-    var clockBegan = false
+    var clockdidBegin = false
     var didRegisterBasket = false
+    var currentBallindex = 0
     
     var formatter: NSNumberFormatter = {
         var formatter = NSNumberFormatter()
@@ -46,36 +47,42 @@ class GameViewController: UIViewController  {
         }
         
         if recognizer.state == .Began {
-            if clockBegan == false {
+            
+//            let ball = gameView.scene?.childNodeWithName("inactiveBall")
+//            ball?.name = "activeBall"
+            
+            if clockdidBegin == false {
                 countdownTimer.start()
-                clockBegan = true
+                clockdidBegin = true
             }
         }
         
         if recognizer.state == .Ended {
             let force: CGFloat = 1.0
             let gestureVelocity = recognizer.velocityInView(recognizer.view)
-            let impulse = CGVectorMake(gestureVelocity.x * force, gestureVelocity.y * force * -1)
+            let (xVelocity, yVelocity) = (gestureVelocity.x / 4, gestureVelocity.y / -4)
+            let impulse = CGVectorMake(xVelocity * force, yVelocity * force)
+            
             gameView.ball.physicsBody?.applyImpulse(impulse)
             gameView.ball.physicsBody?.affectedByGravity = true
-            
+
             let shadowNode = scene.childNodeWithName("shadow")
             shadowNode?.removeFromParent()
-            gameView.ball.zPosition = 1
             
             let shrinkBall = SKAction.scaleBy(0.75, duration: 1.0)
             gameView.ball.runAction(shrinkBall)
             
-            let respawnDelay = SKAction.waitForDuration(0.5)
+            let respawnDelay = SKAction.waitForDuration(1.0)
             let respawn = SKAction.runBlock() {
-                self.gameView.createBall()
+                self.currentBallindex += 1
+                self.gameView.createBall(self.currentBallindex)
             }
+
             let reload = SKAction.sequence([respawnDelay, respawn])
             gameView.ball.runAction(reload)
             didRegisterBasket = false
         }
     }
-    
 }
 
 extension GameViewController: TimerDelegate {
@@ -99,7 +106,7 @@ extension GameViewController: SKPhysicsContactDelegate {
         
         if (contact.bodyA.categoryBitMask == PhysicsType.ball && contact.bodyB.categoryBitMask == PhysicsType.hoop) ||
            (contact.bodyA.categoryBitMask == PhysicsType.hoop && contact.bodyB.categoryBitMask == PhysicsType.ball) {
-
+            
             if secondNode?.physicsBody?.velocity.dy < 0 && !didRegisterBasket {
                 gameView.score += 1
                 gameView.scoreLabel.text = "\(gameView.score)"
@@ -113,10 +120,17 @@ extension GameViewController: SKSceneDelegate {
 
     func update(currentTime: NSTimeInterval, forScene scene: SKScene) {
         
-        if gameView.ball.position.y >= gameView.hoopRect.origin.y {
+        let ballNode = scene.childNodeWithName("activeBall-\(currentBallindex)")
+        let previousBallNode = scene.childNodeWithName("activeBall-\(currentBallindex - 1)")
+        
+        if ballNode?.position.y >= gameView.hoopRect.origin.y {
             gameView.ball.physicsBody?.collisionBitMask = PhysicsType.rim
-        } else if gameView.ball.position.y < gameView.hoopRect.origin.y {
+            gameView.hoop.zPosition = 4
+//            gameView.hoop.strokeColor = UIColor.redColor()
+        } else if previousBallNode?.position.y < gameView.hoopRect.origin.y - 100 {
             gameView.ball.physicsBody?.collisionBitMask = PhysicsType.none
+            gameView.hoop.zPosition = 2
+//            gameView.hoop.strokeColor = UIColor.blackColor()
         }
     }
 }

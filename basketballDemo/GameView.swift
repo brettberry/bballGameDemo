@@ -23,8 +23,9 @@ class GameView: SKView {
         let scene = SKScene(size: frame.size)
         scene.backgroundColor = UIColor.whiteColor()
         presentScene(scene)
-        createBall()
+        ignoresSiblingOrder = true 
         createHoop()
+        createBall()
         createFloor()
         createScoreBoard(score)
         createRim()
@@ -34,7 +35,7 @@ class GameView: SKView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func createBall() {
+    func createBall(index: Int = 0) {
         let size = CGSize(width: 100, height: 100)
         let location = CGPointMake((frame.width - size.width) / 2, 100)
         let rect = CGRectMake(location.x, location.y, size.width, size.height)
@@ -43,7 +44,8 @@ class GameView: SKView {
         ball.fillColor = UIColor.orangeColor()
         ball.strokeColor = UIColor.orangeColor()
         ball.alpha = 0.0
-        ball.zPosition = 5
+        ball.zPosition = 3
+        ball.name = "activeBall-\(index)"
         
         let ballBody = SKPhysicsBody(circleOfRadius: size.width / 2, center: CGPointMake(location.x + size.width / 2, location.y + size.height / 2))
         ballBody.affectedByGravity = false
@@ -64,7 +66,7 @@ class GameView: SKView {
         shadow.name = "shadow"
         shadow.fillColor = UIColor.grayColor()
         shadow.strokeColor = UIColor.clearColor()
-        shadow.zPosition = 3
+        shadow.zPosition = 1
         shadow.alpha = 0.4
         scene?.addChild(shadow)
         
@@ -78,7 +80,7 @@ class GameView: SKView {
         ball.addChild(highlight)
     }
     
-    private func createHoop() {
+    func createHoop() {
         let width: CGFloat = frame.width * 3/5
         let height: CGFloat = width * 2/3
         let size = CGSize(width: width, height: height)
@@ -90,7 +92,7 @@ class GameView: SKView {
         backboard.strokeColor = UIColor.grayColor()
         backboard.fillColor = UIColor.whiteColor()
         backboard.lineWidth = 5
-        backboard.zPosition = 0
+        backboard.zPosition = 2
         scene?.addChild(backboard)
         
         let innerRectSize = CGSize(width: size.width * (2/5), height: size.height * (2/5) + 10)
@@ -109,7 +111,8 @@ class GameView: SKView {
         hoop = SKShapeNode(path: hoopPath)
         hoop.strokeColor = UIColor.blackColor()
         hoop.lineWidth = 7
-        hoop.zPosition = 1
+        hoop.physicsBody?.dynamic = true 
+        hoop.zPosition = 2
     
         let hoopBody = SKPhysicsBody(edgeChainFromPath: hoopPath)
         hoopBody.mass = 1.0
@@ -176,7 +179,7 @@ class GameView: SKView {
         let path = CGPathCreateWithRect(rect, nil)
         let floor = SKShapeNode(path: path)
         floor.fillColor = UIColor.lightGrayColor()
-        floor.zPosition = 2
+        floor.zPosition = 0
         scene?.addChild(floor)
     }
     
