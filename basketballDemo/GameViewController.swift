@@ -30,7 +30,7 @@ class GameViewController: UIViewController  {
         gameView = GameView(frame: view.frame)
         view.addSubview(gameView)
         configurePanGesture()
-        countdownTimer = Timer(seconds: 20, delegate: self)
+        countdownTimer = Timer(seconds: 30, delegate: self)
         gameView.scene?.physicsWorld.contactDelegate = self
         gameView.scene?.delegate = self
     }
@@ -47,10 +47,6 @@ class GameViewController: UIViewController  {
         }
         
         if recognizer.state == .Began {
-            
-//            let ball = gameView.scene?.childNodeWithName("inactiveBall")
-//            ball?.name = "activeBall"
-            
             if clockdidBegin == false {
                 countdownTimer.start()
                 clockdidBegin = true
@@ -60,7 +56,7 @@ class GameViewController: UIViewController  {
         if recognizer.state == .Ended {
             let force: CGFloat = 1.0
             let gestureVelocity = recognizer.velocityInView(recognizer.view)
-            let (xVelocity, yVelocity) = (gestureVelocity.x / 4, gestureVelocity.y / -4)
+            let (xVelocity, yVelocity) = (gestureVelocity.x / 2, gestureVelocity.y / -2)
             let impulse = CGVectorMake(xVelocity * force, yVelocity * force)
             
             gameView.ball.physicsBody?.applyImpulse(impulse)
@@ -123,13 +119,17 @@ extension GameViewController: SKSceneDelegate {
         let ballNode = scene.childNodeWithName("activeBall-\(currentBallindex)")
         let previousBallNode = scene.childNodeWithName("activeBall-\(currentBallindex - 1)")
         
-        if ballNode?.position.y >= gameView.hoopRect.origin.y {
+        if ballNode?.position.y >= gameView.hoopRect.origin.y - 100 {
             gameView.ball.physicsBody?.collisionBitMask = PhysicsType.rim
             gameView.hoop.zPosition = 4
+            gameView.rimLeft.zPosition = 4
+            gameView.rimRight.zPosition = 4
 //            gameView.hoop.strokeColor = UIColor.redColor()
         } else if previousBallNode?.position.y < gameView.hoopRect.origin.y - 100 {
             gameView.ball.physicsBody?.collisionBitMask = PhysicsType.none
             gameView.hoop.zPosition = 2
+            gameView.rimLeft.zPosition = 2
+            gameView.rimRight.zPosition = 2
 //            gameView.hoop.strokeColor = UIColor.blackColor()
         }
     }

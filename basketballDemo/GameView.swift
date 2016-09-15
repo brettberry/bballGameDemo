@@ -14,10 +14,13 @@ class GameView: SKView {
     var timeLabel = SKLabelNode()
     var scoreLabel = SKLabelNode()
     var score: Int = 0
+    
     var hoopSize: CGSize!
     var hoopRect: CGRect!
     var hoop: SKShapeNode!
-    
+    var rimLeft: SKShapeNode!
+    var rimRight: SKShapeNode!
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         let scene = SKScene(size: frame.size)
@@ -31,12 +34,13 @@ class GameView: SKView {
         createRim()
     }
     
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     func createBall(index: Int = 0) {
-        let size = CGSize(width: 100, height: 100)
+        let size = CGSize(width: hoopSize.width, height: hoopSize.width)
         let location = CGPointMake((frame.width - size.width) / 2, 100)
         let rect = CGRectMake(location.x, location.y, size.width, size.height)
         let path = CGPathCreateWithEllipseInRect(rect, nil)
@@ -105,8 +109,8 @@ class GameView: SKView {
         innerRect.lineWidth = 4
         backboard.addChild(innerRect)
         
-        hoopSize = CGSize(width: innerRectSize.width + 20, height: 0)
-        hoopRect = CGRectMake(xOffset - 10, yOffset, hoopSize.width, hoopSize.height)
+        hoopSize = CGSize(width: innerRectSize.width, height: 0)
+        hoopRect = CGRectMake(xOffset, yOffset, hoopSize.width, hoopSize.height)
         let hoopPath = CGPathCreateWithRoundedRect(hoopRect, 5, 0, nil)
         hoop = SKShapeNode(path: hoopPath)
         hoop.strokeColor = UIColor.blackColor()
@@ -138,25 +142,22 @@ class GameView: SKView {
         timeLabel.verticalAlignmentMode = .Center
         timeLabel.position = CGPointMake(clockX + clockSize.width / 2, clockY + clockSize.height / 2)
         timeLabel.fontSize = 26
-        timeLabel.text = "20.00"
+        timeLabel.text = "30.00"
         shotClock.addChild(timeLabel)
     }
     
     func createRim() {
         let rimSize = CGSize(width: 10, height: 0)
-        let rimRectLeft = CGRectMake(hoopRect.origin.x, hoopRect.origin.y, rimSize.width, rimSize.height)
-        let rimRectRight = CGRectMake(hoopRect.origin.x + hoopSize.width - 10, hoopRect.origin.y, rimSize.width, rimSize.height)
+        let rimRectLeft = CGRectMake(hoopRect.origin.x - rimSize.width, hoopRect.origin.y, rimSize.width, rimSize.height)
+        let rimRectRight = CGRectMake(hoopRect.origin.x + hoopSize.width, hoopRect.origin.y, rimSize.width, rimSize.height)
         let rimPathLeft = CGPathCreateWithRoundedRect(rimRectLeft, 5, 0, nil)
         let rimPathRight = CGPathCreateWithRoundedRect(rimRectRight, 5, 0, nil)
         
-        let rimLeft = SKShapeNode(path: rimPathLeft)
-        let rimRight = SKShapeNode(path: rimPathRight)
-        rimLeft.strokeColor = UIColor.clearColor()
-        rimRight.strokeColor = UIColor.clearColor()
+        rimLeft = SKShapeNode(path: rimPathLeft)
+        rimLeft.strokeColor = UIColor.blackColor()
         rimLeft.lineWidth = 7
-        rimRight.lineWidth = 7
+        rimLeft.zPosition = 2
         scene?.addChild(rimLeft)
-        scene?.addChild(rimRight)
         
         let rimBodyLeft = SKPhysicsBody(edgeChainFromPath: rimPathLeft)
         rimBodyLeft.categoryBitMask = PhysicsType.rim
@@ -164,6 +165,12 @@ class GameView: SKView {
         rimBodyLeft.collisionBitMask = PhysicsType.ball
         rimBodyLeft.usesPreciseCollisionDetection = true
         rimLeft.physicsBody = rimBodyLeft
+
+        rimRight = SKShapeNode(path: rimPathRight)
+        rimRight.strokeColor = UIColor.blackColor()
+        rimRight.lineWidth = 7
+        rimRight.zPosition = 2
+        scene?.addChild(rimRight)
         
         let rimBodyRight = SKPhysicsBody(edgeChainFromPath: rimPathRight)
         rimBodyRight.categoryBitMask = PhysicsType.rim
@@ -185,9 +192,8 @@ class GameView: SKView {
     
     private func createScoreBoard(score: Int) {
         scoreLabel.fontColor = UIColor.grayColor()
-        scoreLabel.position = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds) - 75)
-        scoreLabel.verticalAlignmentMode = .Center
-        scoreLabel.fontSize = 72
+        scoreLabel.position = CGPointMake(CGRectGetMidX(self.bounds), self.bounds.height * (3/8) )
+        scoreLabel.fontSize = UIFont.systemFontSize() * 6
         scoreLabel.text = "\(score)"
         scene?.addChild(scoreLabel)
     }
