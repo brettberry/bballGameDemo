@@ -23,17 +23,18 @@ class GameView: SKView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
         let scene = SKScene(size: frame.size)
         scene.backgroundColor = UIColor.whiteColor()
         presentScene(scene)
-        ignoresSiblingOrder = true 
+        ignoresSiblingOrder = true
+        
         createHoop()
         createBall()
         createFloor()
         createScoreBoard(score)
         createRim()
     }
-    
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

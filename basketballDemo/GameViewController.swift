@@ -30,7 +30,7 @@ class GameViewController: UIViewController  {
         gameView = GameView(frame: view.frame)
         view.addSubview(gameView)
         configurePanGesture()
-        countdownTimer = Timer(seconds: 30, delegate: self)
+        countdownTimer = Timer(seconds: 3, delegate: self)
         gameView.scene?.physicsWorld.contactDelegate = self
         gameView.scene?.delegate = self
     }
@@ -85,6 +85,9 @@ extension GameViewController: TimerDelegate {
 
     func timerDidComplete() {
         gameView.timeLabel.text = "0.00"
+        let reveal = SKTransition.fadeWithColor(UIColor.whiteColor(), duration: 1.0)
+        let gameOver = GameOverScene(size: view.frame.size, score: gameView.score)
+        gameView.presentScene(gameOver, transition: reveal)
     }
     
     func timerDidUpdate(withCurrentTime time: NSTimeInterval) {
@@ -102,7 +105,6 @@ extension GameViewController: SKPhysicsContactDelegate {
         
         if (contact.bodyA.categoryBitMask == PhysicsType.ball && contact.bodyB.categoryBitMask == PhysicsType.hoop) ||
            (contact.bodyA.categoryBitMask == PhysicsType.hoop && contact.bodyB.categoryBitMask == PhysicsType.ball) {
-            
             if secondNode?.physicsBody?.velocity.dy < 0 && !didRegisterBasket {
                 gameView.score += 1
                 gameView.scoreLabel.text = "\(gameView.score)"
@@ -124,13 +126,11 @@ extension GameViewController: SKSceneDelegate {
             gameView.hoop.zPosition = 4
             gameView.rimLeft.zPosition = 4
             gameView.rimRight.zPosition = 4
-//            gameView.hoop.strokeColor = UIColor.redColor()
         } else if previousBallNode?.position.y < gameView.hoopRect.origin.y - 100 {
             gameView.ball.physicsBody?.collisionBitMask = PhysicsType.none
             gameView.hoop.zPosition = 2
             gameView.rimLeft.zPosition = 2
             gameView.rimRight.zPosition = 2
-//            gameView.hoop.strokeColor = UIColor.blackColor()
         }
     }
 }

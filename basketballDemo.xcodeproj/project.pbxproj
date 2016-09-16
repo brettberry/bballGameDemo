@@ -17,6 +17,7 @@
 		121FD6141D1C9AF7004E16A6 /* basketballDemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121FD6131D1C9AF7004E16A6 /* basketballDemoUITests.swift */; };
 		121FD6221D1C9B51004E16A6 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121FD6211D1C9B51004E16A6 /* GameView.swift */; };
 		12CCF46F1D470680007183B9 /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12CCF46E1D470680007183B9 /* Timer.swift */; };
+		12FE392A1D8B498F00EBFA8D /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12FE39291D8B498F00EBFA8D /* GameOverScene.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,7 @@
 		121FD6151D1C9AF7004E16A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		121FD6211D1C9B51004E16A6 /* GameView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		12CCF46E1D470680007183B9 /* Timer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
+		12FE39291D8B498F00EBFA8D /* GameOverScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameOverScene.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +108,7 @@
 				121FD5F31D1C9AF7004E16A6 /* AppDelegate.swift */,
 				121FD5F51D1C9AF7004E16A6 /* GameViewController.swift */,
 				121FD6211D1C9B51004E16A6 /* GameView.swift */,
+				12FE39291D8B498F00EBFA8D /* GameOverScene.swift */,
 				120CA68F1D809AE4001392DE /* PhysicsType.swift */,
 				12CCF46E1D470680007183B9 /* Timer.swift */,
 				121FD5F71D1C9AF7004E16A6 /* Main.storyboard */,
@@ -270,6 +273,7 @@
 				121FD6221D1C9B51004E16A6 /* GameView.swift in Sources */,
 				12CCF46F1D470680007183B9 /* Timer.swift in Sources */,
 				121FD5F41D1C9AF7004E16A6 /* AppDelegate.swift in Sources */,
+				12FE392A1D8B498F00EBFA8D /* GameOverScene.swift in Sources */,
 				120CA6901D809AE4001392DE /* PhysicsType.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -415,7 +419,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = basketballDemo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.brettberry.basketballDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -430,7 +434,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = basketballDemo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.brettberry.basketballDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
