@@ -8,7 +8,7 @@
 
 import SpriteKit
 
-class GameView: SKView {
+class GameScene: SKScene {
     
     var ball: SKShapeNode!
     var timeLabel = SKLabelNode()
@@ -24,8 +24,8 @@ class GameView: SKView {
     var gameScene: SKScene!
     var gameDelegate: GameDelegate!
 
-    init(frame: CGRect, gameDelegate: GameDelegate) {
-        super.init(frame: frame)
+    init(size: CGSize, gameDelegate: GameDelegate) {
+        super.init(size: size)
         self.gameDelegate = gameDelegate
     }
     
@@ -39,8 +39,8 @@ class GameView: SKView {
         }
         let transition = SKTransition.fadeWithColor(UIColor.whiteColor(), duration: 1.0)
         gameScene.backgroundColor = UIColor.whiteColor()
-        presentScene(gameScene, transition: transition)
-        ignoresSiblingOrder = true
+        view?.presentScene(gameScene, transition: transition)
+//        ignoresSiblingOrder = true
         createHoop()
         createFloor()
         createRim()
@@ -192,7 +192,7 @@ class GameView: SKView {
     }
     
     private func createFloor() {
-        let size = CGSize(width: bounds.width, height: bounds.height / 4)
+        let size = CGSize(width: frame.width, height: frame.height / 4)
         let rect = CGRectMake(0, 0, size.width, size.height)
         let path = CGPathCreateWithRect(rect, nil)
         let floor = SKShapeNode(path: path)
@@ -203,7 +203,7 @@ class GameView: SKView {
     
     private func createScoreBoard(score: Int) {
         scoreLabel.fontColor = UIColor.grayColor()
-        scoreLabel.position = CGPointMake(CGRectGetMidX(self.bounds), self.bounds.height * (3/8) )
+        scoreLabel.position = CGPointMake(CGRectGetMidX(frame), frame.height * (3/8) )
         scoreLabel.fontSize = UIFont.systemFontSize() * 6
         scoreLabel.text = "\(score)"
         if scoreLabel.parent == nil {

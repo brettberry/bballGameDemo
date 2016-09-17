@@ -10,7 +10,7 @@ import SpriteKit
 
 class GameOverScene: SKScene {
 
-    init(size: CGSize, score: Int) {
+    init(size: CGSize, score: Int, gameViewController: GameViewController) {
         super.init(size: size)
         backgroundColor = UIColor.whiteColor()
         scaleMode = .AspectFill
@@ -18,8 +18,14 @@ class GameOverScene: SKScene {
         
         let delay = SKAction.waitForDuration(1.0)
         let replay = SKAction.runBlock() {
-            let gameView = self.view as? GameView
-            gameView?.setupGameScene()
+            let gameView = self.view
+            let gameScene = GameScene(size: size, gameDelegate: gameViewController)
+            gameViewController.gameScene = gameScene
+
+            gameScene.setupGameScene()
+            gameScene.physicsWorld.contactDelegate = gameViewController
+            gameScene.delegate = gameViewController
+            gameView?.presentScene(gameScene)
         }
         
         let replayGame = SKAction.sequence([delay, replay])

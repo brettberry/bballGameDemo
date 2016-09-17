@@ -11,7 +11,7 @@ import SpriteKit
 
 class GameViewController: UIViewController  {
     
-    var gameView: GameView!
+    var gameScene: GameScene!
     var countdownTimer: Timer!
     var clockdidBegin = false
     var didRegisterBasket = false
@@ -28,11 +28,12 @@ class GameViewController: UIViewController  {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        gameView = GameView(frame: view.frame, gameDelegate: self)
-        gameView.setupGameScene()
-        gameView.scene?.physicsWorld.contactDelegate = self
-        gameView.scene?.delegate = self
-        view.addSubview(gameView)
+        let skView = view as? SKView
+        gameScene = GameScene(size: view.bounds.size, gameDelegate: self)
+        gameScene.setupGameScene()
+        gameScene.physicsWorld.contactDelegate = self
+        gameScene.delegate = self
+        skView?.presentScene(gameScene)
         configurePanGesture()
     }
     
@@ -42,10 +43,6 @@ class GameViewController: UIViewController  {
     }
     
     @objc private func handlePanGesture(recognizer: UIPanGestureRecognizer) {
-        
-        guard let scene = gameView.scene else {
-            return
-        }
         
         if recognizer.state == .Began {
             if clockdidBegin == false {
@@ -60,11 +57,11 @@ class GameViewController: UIViewController  {
             let (xVelocity, yVelocity) = (gestureVelocity.x / 2, gestureVelocity.y / -2)
             let impulse = CGVectorMake(xVelocity * force, yVelocity * force)
             
-            let currentBall = scene.childNodeWithName("activeBall-\(currentBallindex)")
+            let currentBall = gameScene.childNodeWithName("activeBall-\(currentBallindex)")
             currentBall?.physicsBody?.applyImpulse(impulse)
             currentBall?.physicsBody?.affectedByGravity = true
 
-            let shadowNode = scene.childNodeWithName("shadow")
+            let shadowNode = gameScene.childNodeWithName("shadow")
             shadowNode?.removeFromParent()
             
             let shrinkBall = SKAction.scaleBy(0.75, duration: 1.0)
@@ -73,7 +70,7 @@ class GameViewController: UIViewController  {
             let respawnDelay = SKAction.waitForDuration(1.0)
             let respawn = SKAction.runBlock() {
                 self.currentBallindex += 1
-                self.gameView.createBall(self.currentBallindex)
+                self.gameScene.createBall(self.currentBallindex)
             }
 
             let reload = SKAction.sequence([respawnDelay, respawn])
@@ -86,16 +83,16 @@ class GameViewController: UIViewController  {
 extension GameViewController: TimerDelegate {
 
     func timerDidComplete() {
-        gameView.timeLabel.text = "0.00"
-        
+        gameScene.timeLabel.text = "0.00"
+        let skView = view as? SKView
         let reveal = SKTransition.fadeWithColor(UIColor.whiteColor(), duration: 1.0)
-        let gameOver = GameOverScene(size: view.frame.size, score: gameView.score)
-        gameView.presentScene(gameOver, transition: reveal)
+        let gameOver = GameOverScene(size: view.frame.size, score: gameScene.score, gameViewController: self)
+        skView?.presentScene(gameOver, transition: reveal)
     }
     
     func timerDidUpdate(withCurrentTime time: NSTimeInterval) {
         if let countdownString = formatter.stringFromNumber(time) {
-            gameView.timeLabel.text = countdownString
+            gameScene.timeLabel.text = countdownString
         }
     }
 }
@@ -109,8 +106,8 @@ extension GameViewController: SKPhysicsContactDelegate {
         if (contact.bodyA.categoryBitMask == PhysicsType.ball && contact.bodyB.categoryBitMask == PhysicsType.hoop) ||
            (contact.bodyA.categoryBitMask == PhysicsType.hoop && contact.bodyB.categoryBitMask == PhysicsType.ball) {
             if secondNode?.physicsBody?.velocity.dy < 0 && !didRegisterBasket {
-                gameView.score += 1
-                gameView.scoreLabel.text = "\(gameView.score)"
+                gameScene.score += 1
+                gameScene.scoreLabel.text = "\(gameScene.score)"
                 didRegisterBasket = true
             }
         }
@@ -124,18 +121,18 @@ extension GameViewController: SKSceneDelegate {
         let ballNode = scene.childNodeWithName("activeBall-\(currentBallindex)")
         let previousBallNode = scene.childNodeWithName("activeBall-\(currentBallindex - 1)")
         
-        if ballNode?.position.y >= gameView.hoopRect.origin.y - 100 {
+        if ballNode?.position.y >= gameScene.hoopRect.origin.y - 100 {
             ballNode?.physicsBody?.collisionBitMask = PhysicsType.rim
-            gameView.hoop.zPosition = 4
-            gameView.rimLeft.zPosition = 4
-            gameView.rimRight.zPosition = 4
-            gameView.hoop.strokeColor = UIColor.redColor()
-        } else if previousBallNode?.position.y < gameView.hoopRect.origin.y - 100 {
+            gameScene.hoop.zPosition = 4
+            gameScene.rimLeft.zPosition = 4
+            gameScene.rimRight.zPosition = 4
+            gameScene.hoop.strokeColor = UIColor.redColor()
+        } else if previousBallNode?.position.y < gameScene.hoopRect.origin.y - 100 {
             ballNode?.physicsBody?.collisionBitMask = PhysicsType.none
-            gameView.hoop.zPosition = 2
-            gameView.rimLeft.zPosition = 2
-            gameView.rimRight.zPosition = 2
-            gameView.hoop.strokeColor = UIColor.blackColor()
+            gameScene.hoop.zPosition = 2
+            gameScene.rimLeft.zPosition = 2
+            gameScene.rimRight.zPosition = 2
+            gameScene.hoop.strokeColor = UIColor.blackColor()
         }
     }
 }
@@ -144,13 +141,9 @@ extension GameViewController: GameDelegate {
 
     func gameShouldRestart() {
         
-//        for node in gameView.scene!.children {
-//            node.removeFromParent()
-//        }
-        
-        gameView.createBall(currentBallindex)
+        gameScene.createBall(currentBallindex)
         countdownTimer = Timer(seconds: 10, delegate: self)
-        gameView.score = 0
+        gameScene.score = 0
         clockdidBegin = false
         didRegisterBasket = false
     }
