@@ -20,27 +20,35 @@ class GameView: SKView {
     var hoop: SKShapeNode!
     var rimLeft: SKShapeNode!
     var rimRight: SKShapeNode!
+    
+    var gameScene: SKScene!
+    var gameDelegate: GameDelegate!
 
-    override init(frame: CGRect) {
+    init(frame: CGRect, gameDelegate: GameDelegate) {
         super.init(frame: frame)
-        
-        let scene = SKScene(size: frame.size)
-        scene.backgroundColor = UIColor.whiteColor()
-        presentScene(scene)
-        ignoresSiblingOrder = true
-        
-        createHoop()
-        createBall()
-        createFloor()
-        createScoreBoard(score)
-        createRim()
+        self.gameDelegate = gameDelegate
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func createBall(index: Int = 0) {
+    func setupGameScene() {
+        if gameScene == nil {
+            gameScene = SKScene(size: frame.size)
+        }
+        let transition = SKTransition.fadeWithColor(UIColor.whiteColor(), duration: 1.0)
+        gameScene.backgroundColor = UIColor.whiteColor()
+        presentScene(gameScene, transition: transition)
+        ignoresSiblingOrder = true
+        createHoop()
+        createFloor()
+        createRim()
+        gameDelegate.gameShouldRestart()
+        createScoreBoard(score)
+    }
+    
+    func createBall(index: Int) {
         let size = CGSize(width: hoopSize.width, height: hoopSize.width)
         let location = CGPointMake((frame.width - size.width) / 2, 100)
         let rect = CGRectMake(location.x, location.y, size.width, size.height)
@@ -144,7 +152,9 @@ class GameView: SKView {
         timeLabel.position = CGPointMake(clockX + clockSize.width / 2, clockY + clockSize.height / 2)
         timeLabel.fontSize = 26
         timeLabel.text = "30.00"
-        shotClock.addChild(timeLabel)
+        if timeLabel.parent == nil {
+            shotClock.addChild(timeLabel)
+        }
     }
     
     func createRim() {
@@ -196,7 +206,9 @@ class GameView: SKView {
         scoreLabel.position = CGPointMake(CGRectGetMidX(self.bounds), self.bounds.height * (3/8) )
         scoreLabel.fontSize = UIFont.systemFontSize() * 6
         scoreLabel.text = "\(score)"
-        scene?.addChild(scoreLabel)
+        if scoreLabel.parent == nil {
+            scene?.addChild(scoreLabel)
+        }
     }
 }
 

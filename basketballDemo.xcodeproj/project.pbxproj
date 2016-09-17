@@ -18,6 +18,7 @@
 		121FD6221D1C9B51004E16A6 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121FD6211D1C9B51004E16A6 /* GameView.swift */; };
 		12CCF46F1D470680007183B9 /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12CCF46E1D470680007183B9 /* Timer.swift */; };
 		12FE392A1D8B498F00EBFA8D /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12FE39291D8B498F00EBFA8D /* GameOverScene.swift */; };
+		12FE392C1D8BB62A00EBFA8D /* GameDelegateProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12FE392B1D8BB62A00EBFA8D /* GameDelegateProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,7 @@
 		121FD6211D1C9B51004E16A6 /* GameView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		12CCF46E1D470680007183B9 /* Timer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
 		12FE39291D8B498F00EBFA8D /* GameOverScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameOverScene.swift; sourceTree = "<group>"; };
+		12FE392B1D8BB62A00EBFA8D /* GameDelegateProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameDelegateProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +113,7 @@
 				12FE39291D8B498F00EBFA8D /* GameOverScene.swift */,
 				120CA68F1D809AE4001392DE /* PhysicsType.swift */,
 				12CCF46E1D470680007183B9 /* Timer.swift */,
+				12FE392B1D8BB62A00EBFA8D /* GameDelegateProtocol.swift */,
 				121FD5F71D1C9AF7004E16A6 /* Main.storyboard */,
 				121FD5FA1D1C9AF7004E16A6 /* Assets.xcassets */,
 				121FD5FC1D1C9AF7004E16A6 /* LaunchScreen.storyboard */,
@@ -270,6 +273,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				121FD5F61D1C9AF7004E16A6 /* GameViewController.swift in Sources */,
+				12FE392C1D8BB62A00EBFA8D /* GameDelegateProtocol.swift in Sources */,
 				121FD6221D1C9B51004E16A6 /* GameView.swift in Sources */,
 				12CCF46F1D470680007183B9 /* Timer.swift in Sources */,
 				121FD5F41D1C9AF7004E16A6 /* AppDelegate.swift in Sources */,

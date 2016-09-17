@@ -27,12 +27,13 @@ class GameViewController: UIViewController  {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        gameView = GameView(frame: view.frame)
-        view.addSubview(gameView)
-        configurePanGesture()
-        countdownTimer = Timer(seconds: 3, delegate: self)
+        
+        gameView = GameView(frame: view.frame, gameDelegate: self)
+        gameView.setupGameScene()
         gameView.scene?.physicsWorld.contactDelegate = self
         gameView.scene?.delegate = self
+        view.addSubview(gameView)
+        configurePanGesture()
     }
     
     private func configurePanGesture() {
@@ -59,14 +60,15 @@ class GameViewController: UIViewController  {
             let (xVelocity, yVelocity) = (gestureVelocity.x / 2, gestureVelocity.y / -2)
             let impulse = CGVectorMake(xVelocity * force, yVelocity * force)
             
-            gameView.ball.physicsBody?.applyImpulse(impulse)
-            gameView.ball.physicsBody?.affectedByGravity = true
+            let currentBall = scene.childNodeWithName("activeBall-\(currentBallindex)")
+            currentBall?.physicsBody?.applyImpulse(impulse)
+            currentBall?.physicsBody?.affectedByGravity = true
 
             let shadowNode = scene.childNodeWithName("shadow")
             shadowNode?.removeFromParent()
             
             let shrinkBall = SKAction.scaleBy(0.75, duration: 1.0)
-            gameView.ball.runAction(shrinkBall)
+            currentBall?.runAction(shrinkBall)
             
             let respawnDelay = SKAction.waitForDuration(1.0)
             let respawn = SKAction.runBlock() {
@@ -75,7 +77,7 @@ class GameViewController: UIViewController  {
             }
 
             let reload = SKAction.sequence([respawnDelay, respawn])
-            gameView.ball.runAction(reload)
+            currentBall?.runAction(reload)
             didRegisterBasket = false
         }
     }
@@ -85,6 +87,7 @@ extension GameViewController: TimerDelegate {
 
     func timerDidComplete() {
         gameView.timeLabel.text = "0.00"
+        
         let reveal = SKTransition.fadeWithColor(UIColor.whiteColor(), duration: 1.0)
         let gameOver = GameOverScene(size: view.frame.size, score: gameView.score)
         gameView.presentScene(gameOver, transition: reveal)
@@ -122,16 +125,39 @@ extension GameViewController: SKSceneDelegate {
         let previousBallNode = scene.childNodeWithName("activeBall-\(currentBallindex - 1)")
         
         if ballNode?.position.y >= gameView.hoopRect.origin.y - 100 {
-            gameView.ball.physicsBody?.collisionBitMask = PhysicsType.rim
+            ballNode?.physicsBody?.collisionBitMask = PhysicsType.rim
             gameView.hoop.zPosition = 4
             gameView.rimLeft.zPosition = 4
             gameView.rimRight.zPosition = 4
+            gameView.hoop.strokeColor = UIColor.redColor()
         } else if previousBallNode?.position.y < gameView.hoopRect.origin.y - 100 {
-            gameView.ball.physicsBody?.collisionBitMask = PhysicsType.none
+            ballNode?.physicsBody?.collisionBitMask = PhysicsType.none
             gameView.hoop.zPosition = 2
             gameView.rimLeft.zPosition = 2
             gameView.rimRight.zPosition = 2
+            gameView.hoop.strokeColor = UIColor.blackColor()
         }
     }
 }
+
+extension GameViewController: GameDelegate {
+
+    func gameShouldRestart() {
+        
+//        for node in gameView.scene!.children {
+//            node.removeFromParent()
+//        }
+        
+        gameView.createBall(currentBallindex)
+        countdownTimer = Timer(seconds: 10, delegate: self)
+        gameView.score = 0
+        clockdidBegin = false
+        didRegisterBasket = false
+    }
+}
+
+
+
+
+
 

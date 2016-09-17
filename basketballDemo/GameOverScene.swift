@@ -15,7 +15,17 @@ class GameOverScene: SKScene {
         backgroundColor = UIColor.whiteColor()
         scaleMode = .AspectFill
         addLabelsWithFinalScore(score)
-      }
+        
+        let delay = SKAction.waitForDuration(1.0)
+        let replay = SKAction.runBlock() {
+            let gameView = self.view as? GameView
+            gameView?.setupGameScene()
+        }
+        
+        let replayGame = SKAction.sequence([delay, replay])
+        runAction(replayGame)
+        
+    }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -41,8 +51,5 @@ class GameOverScene: SKScene {
         basketsLabel.fontSize = UIFont.systemFontSize() * 4
         addChild(basketsLabel)
     }
-    
-    
-    
-    
+
 }
