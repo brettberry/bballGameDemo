@@ -40,7 +40,6 @@ class GameScene: SKScene {
         let transition = SKTransition.fadeWithColor(UIColor.whiteColor(), duration: 1.0)
         gameScene.backgroundColor = UIColor.whiteColor()
         view?.presentScene(gameScene, transition: transition)
-//        ignoresSiblingOrder = true
         createHoop()
         createFloor()
         createRim()
@@ -103,7 +102,7 @@ class GameScene: SKScene {
         let path = CGPathCreateWithRoundedRect(rect, 20, 20, nil)
         let backboard = SKShapeNode(path: path)
         backboard.strokeColor = UIColor.grayColor()
-        backboard.fillColor = UIColor.whiteColor()
+        backboard.fillColor = UIColor.lightGrayColor()
         backboard.lineWidth = 5
         backboard.zPosition = 2
         scene?.addChild(backboard)
@@ -122,7 +121,7 @@ class GameScene: SKScene {
         hoopRect = CGRectMake(xOffset, yOffset, hoopSize.width, hoopSize.height)
         let hoopPath = CGPathCreateWithRoundedRect(hoopRect, 5, 0, nil)
         hoop = SKShapeNode(path: hoopPath)
-        hoop.strokeColor = UIColor.blackColor()
+        hoop.strokeColor = UIColor.darkGrayColor()
         hoop.lineWidth = 7
         hoop.physicsBody?.dynamic = true 
         hoop.zPosition = 2
@@ -143,15 +142,15 @@ class GameScene: SKScene {
         let clockRect = CGRectMake(clockX, clockY, clockSize.width, clockSize.height)
         let clockPath = CGPathCreateWithRoundedRect(clockRect, 5, 5, nil)
         let shotClock = SKShapeNode(path: clockPath)
-        shotClock.fillColor = UIColor.lightGrayColor()
-        shotClock.strokeColor = UIColor.lightGrayColor()
+        shotClock.fillColor = UIColor.grayColor()
+        shotClock.strokeColor = UIColor.grayColor()
         backboard.addChild(shotClock)
         
         timeLabel.horizontalAlignmentMode = .Center
         timeLabel.verticalAlignmentMode = .Center
         timeLabel.position = CGPointMake(clockX + clockSize.width / 2, clockY + clockSize.height / 2)
         timeLabel.fontSize = 26
-        timeLabel.text = "30.00"
+        timeLabel.text = "20.00"
         if timeLabel.parent == nil {
             shotClock.addChild(timeLabel)
         }
@@ -165,7 +164,7 @@ class GameScene: SKScene {
         let rimPathRight = CGPathCreateWithRoundedRect(rimRectRight, 5, 0, nil)
         
         rimLeft = SKShapeNode(path: rimPathLeft)
-        rimLeft.strokeColor = UIColor.blackColor()
+        rimLeft.strokeColor = UIColor.darkGrayColor()
         rimLeft.lineWidth = 7
         rimLeft.zPosition = 2
         scene?.addChild(rimLeft)
@@ -178,7 +177,7 @@ class GameScene: SKScene {
         rimLeft.physicsBody = rimBodyLeft
 
         rimRight = SKShapeNode(path: rimPathRight)
-        rimRight.strokeColor = UIColor.blackColor()
+        rimRight.strokeColor = UIColor.darkGrayColor()
         rimRight.lineWidth = 7
         rimRight.zPosition = 2
         scene?.addChild(rimRight)
@@ -197,6 +196,7 @@ class GameScene: SKScene {
         let path = CGPathCreateWithRect(rect, nil)
         let floor = SKShapeNode(path: path)
         floor.fillColor = UIColor.lightGrayColor()
+        floor.strokeColor = UIColor.lightGrayColor()
         floor.zPosition = 0
         scene?.addChild(floor)
     }

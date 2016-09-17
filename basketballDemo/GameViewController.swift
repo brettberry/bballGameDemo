@@ -43,7 +43,6 @@ class GameViewController: UIViewController  {
     }
     
     @objc private func handlePanGesture(recognizer: UIPanGestureRecognizer) {
-        
         if recognizer.state == .Began {
             if clockdidBegin == false {
                 countdownTimer.start()
@@ -126,13 +125,11 @@ extension GameViewController: SKSceneDelegate {
             gameScene.hoop.zPosition = 4
             gameScene.rimLeft.zPosition = 4
             gameScene.rimRight.zPosition = 4
-            gameScene.hoop.strokeColor = UIColor.redColor()
         } else if previousBallNode?.position.y < gameScene.hoopRect.origin.y - 100 {
             ballNode?.physicsBody?.collisionBitMask = PhysicsType.none
             gameScene.hoop.zPosition = 2
             gameScene.rimLeft.zPosition = 2
             gameScene.rimRight.zPosition = 2
-            gameScene.hoop.strokeColor = UIColor.blackColor()
         }
     }
 }
@@ -142,7 +139,7 @@ extension GameViewController: GameDelegate {
     func gameShouldRestart() {
         
         gameScene.createBall(currentBallindex)
-        countdownTimer = Timer(seconds: 10, delegate: self)
+        countdownTimer = Timer(seconds: 20, delegate: self)
         gameScene.score = 0
         clockdidBegin = false
         didRegisterBasket = false
