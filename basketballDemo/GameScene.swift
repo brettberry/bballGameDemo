@@ -37,8 +37,7 @@ class GameScene: SKScene {
         if gameScene == nil {
             gameScene = SKScene(size: frame.size)
         }
-        let transition = SKTransition.fadeWithColor(UIColor.whiteColor(), duration: 1.0)
-        gameScene.backgroundColor = UIColor.whiteColor()
+        let transition = SKTransition.fadeWithColor(UIColor.darkGrayColor(), duration: 1.0)
         view?.presentScene(gameScene, transition: transition)
         createHoop()
         createFloor()

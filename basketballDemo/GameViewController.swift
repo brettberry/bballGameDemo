@@ -53,7 +53,7 @@ class GameViewController: UIViewController  {
         if recognizer.state == .Ended {
             let force: CGFloat = 1.0
             let gestureVelocity = recognizer.velocityInView(recognizer.view)
-            let (xVelocity, yVelocity) = (gestureVelocity.x / 2, gestureVelocity.y / -2)
+            let (xVelocity, yVelocity) = (gestureVelocity.x / 3, gestureVelocity.y / -3)
             let impulse = CGVectorMake(xVelocity * force, yVelocity * force)
             
             let currentBall = gameScene.childNodeWithName("activeBall-\(currentBallindex)")
@@ -84,9 +84,9 @@ extension GameViewController: TimerDelegate {
     func timerDidComplete() {
         gameScene.timeLabel.text = "0.00"
         let skView = view as? SKView
-        let reveal = SKTransition.fadeWithColor(UIColor.whiteColor(), duration: 1.0)
+        let transition = SKTransition.fadeWithColor(UIColor.darkGrayColor(), duration: 1.0)
         let gameOver = GameOverScene(size: view.frame.size, score: gameScene.score, gameViewController: self)
-        skView?.presentScene(gameOver, transition: reveal)
+        skView?.presentScene(gameOver, transition: transition)
     }
     
     func timerDidUpdate(withCurrentTime time: NSTimeInterval) {
